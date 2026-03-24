@@ -1,349 +1,747 @@
-{{-- resources/views/admin/products/index.blade.php --}}
-
 @extends('layouts.admin')
 
 @section('title', 'Products')
 
 @section('content')
-<div class="container-fluid" style="padding: 2rem 2rem 2rem 230px; background: #f5f7fa; min-height: 100vh;">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-end mb-4">
-        <a href="{{ route('admin.products.create') }}" class="btn px-4 py-2" style="background: #6c7ae0; border: none; color: white; border-radius: 8px; font-weight: 500; box-shadow: 0 2px 8px rgba(108, 122, 224, 0.3); transition: all 0.3s ease;">
-            <i class="fas fa-plus me-2"></i> Add New Product
+
+<main class="dashboard-content">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div>
+            <h1>Products</h1>
+            <p>Manage your product catalog, inventory, and pricing.</p>
+        </div>
+        <a href="{{ route('admin.products.create') }}" class="btn-primary">
+            <i class="fas fa-plus-circle"></i> Add New Product
         </a>
     </div>
 
-    <!-- Alert Messages -->
+    <!-- Success/Error Messages -->
     @if(session('success'))
-        <div class="alert alert-dismissible fade show mb-3" role="alert" style="background: #4caf50; border: none; border-radius: 8px; color: white; padding: 1rem;">
-            <i class="fas fa-check-circle me-2"></i>
-            {{ session('success') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        <div class="alert-box alert-success">
+            <i class="fas fa-check-circle"></i>
+            <div>
+                <strong>Success!</strong>
+                <p>{{ session('success') }}</p>
+            </div>
         </div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-dismissible fade show mb-3" role="alert" style="background: #f44336; border: none; border-radius: 8px; color: white; padding: 1rem;">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            {{ session('error') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        <div class="alert-box alert-danger">
+            <i class="fas fa-times-circle"></i>
+            <div>
+                <strong>Error!</strong>
+                <p>{{ session('error') }}</p>
+            </div>
         </div>
     @endif
 
-    <!-- Filters Card -->
-    <div class="card mb-3" style="border: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); background: white;">
-        <div class="card-body p-3">
-            <form action="{{ route('admin.products.index') }}" method="GET">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label class="form-label fw-medium text-uppercase mb-2" style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 0.5px;">Search</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0" style="border-radius: 8px 0 0 8px; border: 1px solid #e2e8f0;">
-                                <i class="fas fa-search" style="color: #94a3b8; font-size: 0.9rem;"></i>
-                            </span>
-                            <input type="text" name="search" class="form-control border-start-0 ps-0" 
-                                   placeholder="Product name or SKU..." 
-                                   value="{{ request('search') }}"
-                                   style="border-radius: 0 8px 8px 0; border: 1px solid #e2e8f0; padding: 0.6rem 0.75rem;">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-uppercase mb-2" style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 0.5px;">Status</label>
-                        <select name="status" class="form-select" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.75rem;">
-                            <option value="">All Status</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="out_of_stock" {{ request('status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-medium text-uppercase mb-2" style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 0.5px;">Stock</label>
-                        <select name="stock_status" class="form-select" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.6rem 0.75rem;">
-                            <option value="">All Stock</option>
-                            <option value="in_stock" {{ request('stock_status') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
-                            <option value="low_stock" {{ request('stock_status') == 'low_stock' ? 'selected' : '' }}>Low Stock</option>
-                            <option value="out_of_stock" {{ request('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
-                        </select>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="submit" class="btn w-100" style="background: #6c7ae0; border: none; color: white; border-radius: 8px; padding: 0.6rem; font-weight: 500;">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="{{ route('admin.products.index') }}" class="btn w-100" style="background: white; border: 1px solid #e2e8f0; color: #64748b; border-radius: 8px; padding: 0.6rem; font-weight: 500;">
-                            <i class="fas fa-redo me-1"></i> Reset
-                        </a>
-                    </div>
-                </div>
-            </form>
+    <!-- Quick Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-glasses"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ $products->total() }}</h3>
+                <p>Total Products</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #d4edda; color: #28a745;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ \App\Models\Product::where('is_active', true)->count() }}</h3>
+                <p>Active Products</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fff3cd; color: #856404;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ \App\Models\Product::whereColumn('stock_quantity', '<=', 'low_stock_threshold')->count() }}</h3>
+                <p>Low Stock</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f8d7da; color: #721c24;">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ \App\Models\Product::where('stock_quantity', 0)->count() }}</h3>
+                <p>Out of Stock</p>
+            </div>
         </div>
     </div>
 
-    <!-- Products Card -->
-    <div class="card" style="border: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); background: white;">
-        <div class="card-body p-0">
-            <form id="bulk-delete-form" action="{{ route('admin.products.bulk-delete') }}" method="POST">
-                @csrf
-                
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                            <tr>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; width: 50px;">
-                                    <input type="checkbox" id="select-all" class="form-check-input" style="width: 16px; height: 16px; cursor: pointer;">
-                                </th>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; width: 100px;">Image</th>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">Product</th>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; width: 150px;">Price</th>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; width: 130px;">Stock</th>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; width: 120px;">Status</th>
-                                <th class="py-3 px-4" style="border: none; font-weight: 600; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; width: 150px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($products as $product)
-                                <tr style="border-bottom: 1px solid #f1f5f9;">
-                                    <td class="py-3 px-4 align-middle">
-                                        <input type="checkbox" name="ids[]" value="{{ $product->id }}" class="product-checkbox form-check-input" style="width: 16px; height: 16px; cursor: pointer;">
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
-                                        @if($product->productImages && $product->productImages->isNotEmpty())
-                                            <img src="{{ asset('storage/' . $product->productImages->first()->image_path) }}" 
-                                                 alt="{{ $product->name }}" 
-                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                        @else
-                                            <div class="d-flex align-items-center justify-content-center" 
-                                                 style="width: 50px; height: 50px; background: #6c7ae0; border-radius: 8px;">
-                                                <i class="fas fa-image text-white" style="font-size: 1.2rem;"></i>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
-                                        <div>
-                                            <strong style="color: #1e293b; font-size: 0.95rem; display: block;">{{ $product->name }}</strong>
-                                            <small style="color: #94a3b8; font-size: 0.8rem;">SKU: {{ $product->sku }}</small>
-                                            @if($product->featured)
-                                                <span class="badge mt-1" style="background: linear-gradient(135deg, #ec4899, #f97316); border: none; padding: 0.25rem 0.6rem; font-weight: 600; font-size: 0.7rem; border-radius: 4px;">
-                                                    <i class="fas fa-star me-1"></i> Featured
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
-                                        @if($product->discount_price)
-                                            <div>
-                                                <span class="text-decoration-line-through" style="color: #94a3b8; font-size: 0.85rem; display: block;">${{ number_format($product->price, 2) }}</span>
-                                                <div class="d-flex align-items-center gap-1 mt-1">
-                                                    <strong style="color: #ef4444; font-size: 1rem;">${{ number_format($product->discount_price, 2) }}</strong>
-                                                    <span class="badge" style="background: #ef4444; padding: 0.2rem 0.4rem; font-size: 0.65rem; border-radius: 4px;">
-                                                        -{{ $product->discount_percentage }}%
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <strong style="color: #1e293b; font-size: 1rem;">${{ number_format($product->price, 2) }}</strong>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
-                                        @if($product->stock_quantity == 0)
-                                            <span class="badge" style="background: #ef4444; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.75rem; border-radius: 6px;">
-                                                <i class="fas fa-times-circle me-1"></i> Out of Stock
-                                            </span>
-                                        @elseif($product->stock_quantity <= 10)
-                                            <span class="badge" style="background: #f59e0b; color: white; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.75rem; border-radius: 6px;">
-                                                <i class="fas fa-exclamation-triangle me-1"></i> Low: {{ $product->stock_quantity }}
-                                            </span>
-                                        @else
-                                            <span class="badge" style="background: #10b981; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.75rem; border-radius: 6px;">
-                                                <i class="fas fa-check-circle me-1"></i> {{ $product->stock_quantity }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
-                                        @if($product->status == 'active')
-                                            <span class="badge" style="background: #10b981; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.75rem; border-radius: 6px;">
-                                                <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Active
-                                            </span>
-                                        @elseif($product->status == 'inactive')
-                                            <span class="badge" style="background: #6b7280; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.75rem; border-radius: 6px;">
-                                                <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Inactive
-                                            </span>
-                                        @else
-                                            <span class="badge" style="background: #ef4444; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.75rem; border-radius: 6px;">
-                                                <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Out of Stock
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('admin.products.edit', $product->id) }}" 
-                                               class="btn btn-sm" 
-                                               title="Edit"
-                                               style="background: #f59e0b; border: none; color: white; padding: 0.4rem 0.7rem; border-radius: 6px 0 0 6px;">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{{ route('admin.products.show', $product->id) }}" 
-                                               class="btn btn-sm" 
-                                               title="View"
-                                               style="background: #6c7ae0; border: none; color: white; padding: 0.4rem 0.7rem; margin-left: 1px;">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <form action="{{ route('admin.products.destroy', $product->id) }}" 
-                                                  method="POST" 
-                                                  style="display: inline; margin: 0;"
-                                                  onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" 
-                                                        class="btn btn-sm" 
-                                                        title="Delete"
-                                                        style="background: #ef4444; border: none; color: white; padding: 0.4rem 0.7rem; border-radius: 0 6px 6px 0; margin-left: 1px;">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-5">
-                                        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 250px;">
-                                            <div class="mb-3" style="width: 80px; height: 80px; background: #e2e8f0; border-radius: 50%; display: flex; align-items-center; justify-content: center;">
-                                                <i class="fas fa-box-open" style="font-size: 2rem; color: #94a3b8;"></i>
-                                            </div>
-                                            <h5 class="mb-2" style="color: #64748b;">No products found</h5>
-                                            <p class="text-muted mb-3" style="font-size: 0.9rem;">Try adjusting your filters or add your first product</p>
-                                            <a href="{{ route('admin.products.create') }}" class="btn" style="background: #6c7ae0; border: none; color: white; border-radius: 8px; padding: 0.6rem 1.5rem; font-weight: 500;">
-                                                <i class="fas fa-plus me-2"></i> Add Product
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+    <!-- Search & Filter Section -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>Filter Products</h2>
+        </div>
+        <form action="{{ route('admin.products.index') }}" method="GET" class="filter-form">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <input type="text"
+                           name="search"
+                           value="{{ request('search') }}"
+                           placeholder="Search by name or SKU..."
+                           class="form-control">
                 </div>
-            </form>
 
-            <!-- Pagination -->
-            <div class="p-3 border-top" style="background: #fafbfc;">
-                {{ $products->appends(request()->query())->links() }}
+                <div class="filter-group">
+                    <select name="category" class="form-control">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <select name="brand" class="form-control">
+                        <option value="">All Brands</option>
+                        @foreach($brands ?? [] as $brand)
+                            <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <select name="status" class="form-control">
+                        <option value="">All Status</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a href="{{ route('admin.products.index') }}" class="btn-secondary">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                </div>
             </div>
+        </form>
+    </section>
+
+    <!-- Products Table -->
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>All Products</h2>
+            <span class="view-all-link">{{ $products->total() }} total</span>
+        </div>
+
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <!-- <th>Status</th> -->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($products as $product)
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="product-checkbox" value="{{ $product->id }}">
+                        </td>
+                        <td>
+                            <img src="{{ asset('storage/'.$product->primary_image) }}"
+                                    alt="{{ $product->name }}"
+                                    class="product-thumb">
+                        </td>
+                        <td>
+                            <div class="product-name">{{ $product->name }}</div>
+                            <div class="product-sku">SKU: {{ $product->sku }}</div>
+                            <div class="product-badges">
+                                @if($product->is_featured)
+                                    <span class="badge badge-blue">Featured</span>
+                                @endif
+                                @if($product->is_new)
+                                    <span class="badge badge-green">New</span>
+                                @endif
+                                @if($product->is_bestseller)
+                                    <span class="badge badge-yellow">Bestseller</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>{{ $product->category->name ?? 'N/A' }}</td>
+                        <td>{{ $product->brand->name ?? 'N/A' }}</td>
+                        <td>
+                            @if($product->sale_price)
+                                <div class="price-sale">৳{{ number_format($product->sale_price, 2) }}</div>
+                                <div class="price-original">৳{{ number_format($product->price, 2) }}</div>
+                            @else
+                                <div class="price-regular">৳{{ number_format($product->price, 2) }}</div>
+                            @endif
+                        </td>
+                        <td>
+                            @if($product->stock_quantity == 0)
+                                <span class="status-badge status-cancelled">Out of Stock</span>
+                            @elseif($product->is_low_stock)
+                                <span class="status-badge status-pending">Low ({{ $product->stock_quantity }})</span>
+                            @else
+                                <span class="status-badge status-delivered">{{ $product->stock_quantity }}</span>
+                            @endif
+                        </td>
+                        <!-- <td>
+                            <button onclick="toggleStatus({{ $product->id }})"
+                                    class="toggle-btn {{ $product->is_active ? 'toggle-active' : 'toggle-inactive' }}"
+                                    title="{{ $product->is_active ? 'Active - click to deactivate' : 'Inactive - click to activate' }}">
+                                <span class="toggle-knob"></span>
+                            </button>
+                        </td> -->
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{{ route('admin.products.show', $product) }}" class="btn-view">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('admin.products.edit', $product) }}" class="btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button onclick="deleteProduct({{ $product->id }})" class="btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="no-data">
+                            <i class="fas fa-inbox"></i>
+                            <p>No products found.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrapper">
+            {{ $products->appends(request()->query())->links() }}
+        </div>
+    </section>
+</main>
+
+<!-- Bulk Actions Bar -->
+<div id="bulkActions" class="bulk-actions-bar hidden">
+    <div class="bulk-actions-inner">
+        <div class="bulk-info">
+            <i class="fas fa-check-circle"></i>
+            <span id="selectedCount">0</span> item(s) selected
+        </div>
+        <div class="bulk-buttons">
+            <button onclick="bulkDelete()" class="btn-danger">
+                <i class="fas fa-trash"></i> Delete Selected
+            </button>
+            <button onclick="clearSelection()" class="btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </button>
         </div>
     </div>
 </div>
 
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 <style>
-/* Hover effects for buttons */
-.btn:hover {
-    transform: translateY(-1px);
-    opacity: 0.9;
+/* ── Reuse Code 1 base styles ─────────────────────────────────────── */
+.welcome-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
 
-/* Custom checkbox styling */
-.form-check-input:checked {
-    background-color: #6c7ae0;
-    border-color: #6c7ae0;
+.welcome-section h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 0.3rem;
 }
 
-/* Smooth transitions */
-.btn, .badge, input, select {
-    transition: all 0.2s ease;
+.welcome-section p {
+    color: #6c757d;
+    margin: 0;
 }
 
-/* Table row hover */
-.table tbody tr:hover {
-    background-color: #f8fafc !important;
-}
-
-/* Action button hover effects */
-.btn-group .btn:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
-}
-
-/* Pagination styling */
-.pagination {
-    margin-bottom: 0;
-}
-
-.pagination .page-link {
-    border: 1px solid #e2e8f0;
+/* Alert Styles */
+.alert-box {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
     border-radius: 6px;
-    margin: 0 3px;
-    color: #6c7ae0;
-    font-weight: 500;
-    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-left: 4px solid;
+}
+.alert-success  { background: #d4edda; border-color: #28a745; color: #155724; }
+.alert-danger   { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+.alert-warning  { background: #fff3cd; border-color: #ffc107; color: #856404; }
+.alert-box i    { font-size: 1.5rem; }
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.pagination .page-link:hover {
-    background-color: #f8fafc;
-    border-color: #6c7ae0;
+.stat-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border: 1px solid #f0f0f0;
 }
 
-.pagination .page-item.active .page-link {
-    background: #6c7ae0;
-    border-color: #6c7ae0;
+.stat-icon {
+    background: #e8f0fe;
+    color: #007bff;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
 }
 
-.pagination .page-item.disabled .page-link {
-    color: #94a3b8;
-    background-color: #f8fafc;
+.stat-info h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
 }
 
-/* Focus states */
-input:focus, select:focus {
-    border-color: #6c7ae0 !important;
-    box-shadow: 0 0 0 0.2rem rgba(108, 122, 224, 0.25) !important;
+.stat-info p {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Dashboard Section */
+.dashboard-section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border: 1px solid #f0f0f0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.view-all-link {
+    font-size: 0.9rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* Filter Form */
+.filter-form {
+    padding: 1.5rem;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 160px;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Form Controls */
+.form-control {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    background: #fff;
+}
+
+.form-control:focus {
     outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,.1);
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary, .btn-danger {
+    padding: 0.65rem 1.25rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-primary  { background: #007bff; color: #fff; }
+.btn-primary:hover  { background: #0056b3; }
+.btn-secondary { background: #6c757d; color: #fff; }
+.btn-secondary:hover { background: #5a6268; }
+.btn-danger   { background: #dc3545; color: #fff; }
+.btn-danger:hover   { background: #c82333; }
+
+/* Table */
+.orders-table {
+    overflow-x: auto;
+}
+
+.orders-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.orders-table thead th {
+    background: #f8f9fa;
+    padding: 0.9rem 1rem;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6c757d;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.orders-table tbody td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+    color: #444;
+}
+
+.orders-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.orders-table tbody tr:hover {
+    background: #fafbfc;
+}
+
+/* Product Info */
+.product-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.product-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.product-sku {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.product-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+/* Badges */
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.badge-blue   { background: #cce5ff; color: #004085; }
+.badge-green  { background: #d4edda; color: #155724; }
+.badge-yellow { background: #fff3cd; color: #856404; }
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.status-delivered  { background: #d4edda; color: #155724; }
+.status-pending    { background: #fff3cd; color: #856404; }
+.status-cancelled  { background: #f8d7da; color: #721c24; }
+.status-processing { background: #cce5ff; color: #004085; }
+
+/* Price */
+.price-sale     { font-weight: 600; color: #dc3545; }
+.price-original { font-size: 0.82rem; color: #999; text-decoration: line-through; }
+.price-regular  { font-weight: 600; color: #333; }
+
+/* Toggle Switch */
+.toggle-btn {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex-shrink: 0;
+}
+
+.toggle-active   { background: #28a745; }
+.toggle-inactive { background: #ccc; }
+
+.toggle-knob {
+    position: absolute;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: left 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+
+.toggle-active   .toggle-knob { left: 23px; }
+.toggle-inactive .toggle-knob { left: 3px;  }
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.btn-view, .btn-edit, .btn-delete {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-view   { background: #e8f4fd; color: #007bff; }
+.btn-view:hover   { background: #007bff; color: #fff; }
+.btn-edit   { background: #e8edff; color: #4263eb; }
+.btn-edit:hover   { background: #4263eb; color: #fff; }
+.btn-delete { background: #fde8e8; color: #dc3545; }
+.btn-delete:hover { background: #dc3545; color: #fff; }
+
+/* No Data */
+.no-data {
+    text-align: center;
+    padding: 3rem 1rem !important;
+    color: #aaa;
+}
+.no-data i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Pagination */
+.pagination-wrapper {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f0f0f0;
+    background: #fafbfc;
+}
+
+/* Bulk Actions Bar */
+.bulk-actions-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 2px solid #007bff;
+    box-shadow: 0 -4px 16px rgba(0,0,0,.1);
+    z-index: 999;
+    padding: 1rem 2rem;
+}
+
+.bulk-actions-bar.hidden {
+    display: none;
+}
+
+.bulk-actions-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.bulk-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.bulk-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .welcome-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .filter-row {
+        flex-direction: column;
+    }
+    .filter-group {
+        min-width: 100%;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const selectAllCheckbox = document.getElementById('select-all');
-    const productCheckboxes = document.querySelectorAll('.product-checkbox');
-    const bulkDeleteForm = document.getElementById('bulk-delete-form');
-
-    selectAllCheckbox.addEventListener('change', function() {
-        productCheckboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-        updateBulkActions();
-    });
-
-    productCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateBulkActions);
-    });
-
-    function updateBulkActions() {
-        const checkedCount = document.querySelectorAll('.product-checkbox:checked').length;
-        
-        // Update select-all checkbox state
-        selectAllCheckbox.checked = checkedCount === productCheckboxes.length && checkedCount > 0;
-        selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < productCheckboxes.length;
-        
-        // Show delete confirmation if any items selected
-        if (checkedCount > 0) {
-            // You can add a floating action bar here if needed
-        }
-    }
-    
-    // Handle bulk delete via form submission
-    bulkDeleteForm.addEventListener('submit', function(e) {
-        const checkedCount = document.querySelectorAll('.product-checkbox:checked').length;
-        if (checkedCount === 0) {
-            e.preventDefault();
-            alert('Please select at least one product to delete.');
-            return false;
-        }
-        
-        if (!confirm(`Are you sure you want to delete ${checkedCount} selected product(s)?`)) {
-            e.preventDefault();
-            return false;
-        }
-    });
+// Select All
+document.getElementById('selectAll')?.addEventListener('change', function() {
+    document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = this.checked);
+    updateBulkActions();
 });
+
+document.querySelectorAll('.product-checkbox').forEach(cb => {
+    cb.addEventListener('change', updateBulkActions);
+});
+
+function updateBulkActions() {
+    const checked = document.querySelectorAll('.product-checkbox:checked');
+    const bar = document.getElementById('bulkActions');
+    document.getElementById('selectedCount').textContent = checked.length;
+    bar.classList.toggle('hidden', checked.length === 0);
+}
+
+function clearSelection() {
+    document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = false);
+    document.getElementById('selectAll').checked = false;
+    updateBulkActions();
+}
+
+// Toggle Status
+function toggleStatus(productId) {
+    fetch(`/admin/products/${productId}/toggle-status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(r => r.json())
+    .then(data => { if (data.success) location.reload(); })
+    .catch(err => console.error(err));
+}
+
+// Delete Product
+function deleteProduct(productId) {
+    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/admin/products/${productId}`;
+
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden'; csrf.name = '_token';
+    csrf.value = document.querySelector('meta[name="csrf-token"]').content;
+
+    const method = document.createElement('input');
+    method.type = 'hidden'; method.name = '_method'; method.value = 'DELETE';
+
+    form.append(csrf, method);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Bulk Delete
+function bulkDelete() {
+    const ids = Array.from(document.querySelectorAll('.product-checkbox:checked')).map(cb => cb.value);
+    if (!confirm(`Delete ${ids.length} product(s)? This cannot be undone.`)) return;
+
+    fetch('/admin/products/bulk-delete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ ids })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) location.reload();
+        else alert(data.message);
+    })
+    .catch(() => alert('An error occurred'));
+}
 </script>
+
 @endsection

@@ -2,63 +2,137 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-   protected $fillable = [
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
         'name',
-        'description',
-        'price',
-        'image',
         'slug',
-        'frame_type',
-        'sales_count',
         'sku',
-        'stock_quantity',
-        'featured',
+        'description',
         'short_description',
-        'discount_price',
-        'status',
-        // ... other fields
+        'price',
+        'sale_price',
+        'cost_price',
+        'category_id',
+        'brand_id',
+        'stock_status',
+        'stock_quantity',
+        'low_stock_threshold',
+
+        // Eyewear fields
+        'frame_shape',
+        'frame_material',
+        'frame_color',
+        'lens_type',
+        'lens_color',
+        'lens_material',
+        'gender',
+        'rim_type',
+
+        // Status
+        'is_featured',
+        'is_active',
+        'is_new',
+        'published_at',
     ];
-    public function primaryImage()
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'sale_price' => 'decimal:2',
+        'stock_quantity' => 'integer',
+        'low_stock_threshold' => 'integer',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
+        'is_new' => 'boolean',
+        'published_at' => 'datetime',
+    ];
+
+    /* =====================
+       RELATIONSHIPS
+    ====================== */
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class, 'color_product');
+    }
+
+    /* =====================
+       ACCESSORS
+    ====================== */
+
+    public function getFinalPriceAttribute()
+    {
+        return $this->sale_price ?? $this->price;
+    }
+
+    public function getIsInStockAttribute()
+    {
+        return $this->stock_quantity > 0;
+    }
+
+    public function getPrimaryImageAttribute()
+    {
+        return $this->images()->first()?->image_path;
+             return $path ? 'storage/' . $path : 'images/placeholder.jpg';
+    }
+
+    /* =====================
+       SCOPES
+    ====================== */
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeByBrand($query, $brandIds)
+    {
+        return $query->whereIn('brand_id', (array) $brandIds);
+    }
+
+    public function scopeByCategory($query, $categoryIds)
+    {
+        return $query->whereIn('category_id', (array) $categoryIds);
+    }
+
+    public function scopePriceRange($query, $min, $max)
+    {
+        return $query->whereBetween('price', [$min, $max]);
+    }
+    public function reviews(): HasMany
 {
-    return $this->hasOne(ProductImage::class)->where('is_primary', 1);
-}
-public function images()
-{
-    return $this->hasMany(ProductImage::class);
-}
-public function isInStock()
-{
-    return $this->stock_quantity > 0;
+    return $this->hasMany(Review::class)->where('is_approved', true)->latest();
 }
 
-public function productImages()
+public function averageRating()
 {
-    return $this->hasMany(ProductImage::class);
+    return $this->reviews()->avg('rating') ?? 0;
 }
 
-// protected static function booted()
-// {
-//     static::addGlobalScope('active', function ($query) {
-//         // do nothing because is_active doesn't exist
-//     });
-// }
-public function brand()
+public function reviewCount()
 {
-    return $this->belongsTo(Brand::class, 'brand_id');
+    return $this->reviews()->count();
 }
-public function category()
-{
-    return $this->belongsTo(Category::class, 'category_id');
 }
-
-public function colors()
-{
-    return $this->belongsToMany(Color::class, 'color_product', 'product_id', 'color_id');
-}
- }
-
-

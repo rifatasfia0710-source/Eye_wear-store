@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_image',  
         'role',
         'phone',
         'address',
@@ -61,20 +63,15 @@ class User extends Authenticatable
     {
         return $this->role === 'customer';
     }
-// public function orders()
-//     {
-//         return $this->hasMany(\App\Models\Order::class);
-//     }
-    
-//     // Add appends for orders_count attribute
-//     protected $appends = ['orders_count'];
-    
-//     public function getOrdersCountAttribute()
-//     {
-//         // Return 0 if Order model doesn't exist yet
-//         if (!class_exists(\App\Models\Order::class)) {
-//             return 0;
-//         }
-//         return $this->orders()->count();
-//     }
+public function cartItems(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+    public function order() {
+    return $this->hasMany(\App\Models\Order::class);
+}
+public function items()
+{
+    return $this->hasMany(OrderItem::class);
+}
 }

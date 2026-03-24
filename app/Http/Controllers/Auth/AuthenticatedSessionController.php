@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -23,35 +24,45 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+public function store(LoginRequest $request): RedirectResponse
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $request->session()->regenerate();
+    // 🛒 Guest cart → DB cart sync (ONLY for customers)
+    if (auth()->user()->isCustomer() && session()->has('cart')) {
 
-// DEBUG: Check what role the user has
-    \Log::info('User logged in', [
-        'id' => auth()->user()->id,
-        'email' => auth()->user()->email,
-        'role' => auth()->user()->role,
-        'isAdmin' => auth()->user()->isAdmin(),
-        'isCustomer' => auth()->user()->isCustomer(),
-    ]);
-
-
-        // Redirect based on user role
-        if (auth()->user()->isAdmin()) {
-            return redirect()->intended(route('admin.dashboard'));
+        foreach (session('cart') as $item) {
+            Cart::updateOrCreate(
+                [
+                    'user_id'     => Auth::id(),
+                    'product_id'  => $item['product_id'],
+                    'lens_type'   => $item['lens_type'],
+                    'frame_color' => $item['frame_color'],
+                ],
+                [
+                    'quantity'  => \DB::raw('quantity + '.$item['quantity']),
+                    'sph_left'  => $item['sph_left'],
+                    'sph_right' => $item['sph_right'],
+                ]
+            );
         }
 
-        if (auth()->user()->isCustomer()) {
-            return redirect()->intended(route('customer.dashboard'));
-        }
-
-        // Fallback if no role matches
-        return redirect()->route('dashboard');
+        session()->forget('cart');
     }
 
+    // 🔐 Role based redirect (LAST)
+    if (auth()->user()->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if (auth()->user()->isCustomer()) {
+        return redirect()->route('customer.dashboard');
+    }
+
+    // fallback
+    return redirect()->route('dashboard');
+}
     /**
      * Destroy an authenticated session.
      */
@@ -63,6 +74,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // return redirect('/');
+        return redirect()->intended(route('cart.index'));
     }
 }

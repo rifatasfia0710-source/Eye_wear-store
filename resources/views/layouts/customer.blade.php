@@ -427,31 +427,38 @@ td {
     <aside class="dashboard-sidebar">
         <div class="user-profile">
             <div class="user-avatar">
-                <i class="fas fa-user-circle"></i>
-            </div>
+    {{-- ✅ profile_image থাকলে দেখাও, না থাকলে icon দেখাও --}}
+    @if(Auth::user()->profile_image)
+        <img src="{{ asset('uploads/profile/' . Auth::user()->profile_image) }}"
+             alt="Profile"
+             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.5);">
+    @else
+        <i class="fas fa-user-circle"></i>
+    @endif
+</div>
             <h3>{{ Auth::user()->name }}</h3>
             <p>{{ Auth::user()->email }}</p>
         </div>
         
         <nav class="sidebar-nav">
-            <a href="#overview" class="nav-item active">
+            <a href="{{ route('customer.dashboard') }}" class="nav-item active">
                 <i class="fas fa-home"></i> Dashboard
             </a>
-            <a href="#orders" class="nav-item">
+            <a href="{{ route('customer.order') }}" class="nav-item">
                 <i class="fas fa-shopping-bag"></i> My Orders
             </a>
-            <!-- <a href="#prescription" class="nav-item">
-                <i class="fas fa-file-medical"></i> Prescriptions
+             <a href="{{ route('frontend.shop') }}" class="nav-item">
+                <i class="fas fa-file-medical"></i> Shop
             </a>
-            <a href="#wishlist" class="nav-item">
-                <i class="fas fa-heart"></i> Wishlist
-            </a> -->
-            <a href="#profile" class="nav-item">
+            <a href="{{ route('cart.index') }}" class="nav-item">
+                <i class="fas fa-heart"></i> Cart
+            </a> 
+            <a href="{{ route('profile.edit') }}" class="nav-item">
                 <i class="fas fa-user"></i> Profile Settings
             </a>
-            <a href="#addresses" class="nav-item">
+            <!-- <a href="#addresses" class="nav-item">
                 <i class="fas fa-map-marker-alt"></i> Addresses
-            </a>
+            </a> -->
             <a href="{{ route('logout') }}" class="nav-item" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout

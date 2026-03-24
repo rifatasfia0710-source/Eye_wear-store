@@ -412,9 +412,21 @@ td {
     <!-- Sidebar Navigation -->
     <aside class="dashboard-sidebar">
         <div class="user-profile">
-            <div class="user-avatar">
-                <i class="fas fa-user-shield"></i>
-            </div>
+            <div class="user-profile">
+    <div class="user-avatar">
+        {{-- ✅ profile_image থাকলে দেখাও, না থাকলে icon --}}
+        @if(Auth::user()->profile_image)
+            <img src="{{ asset('uploads/profile/' . Auth::user()->profile_image) }}"
+                 alt="{{ Auth::user()->name }}"
+                 style="width:80px; height:80px; border-radius:50%;
+                        object-fit:cover;
+                        border:3px solid rgba(255,255,255,0.5);
+                        box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+        @else
+            <i class="fas fa-user-shield"></i>
+        @endif
+    </div>
+    
             <h3>{{ Auth::user()->name }}</h3>
             <p>{{ Auth::user()->email }}</p>
             <span class="admin-badge">ADMINISTRATOR</span>
@@ -424,25 +436,25 @@ td {
             <a href="{{ route('admin.dashboard') }}" class="nav-item active">
                 <i class="fas fa-home"></i> Dashboard
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.orders.index') }}" class="nav-item">
                 <i class="fas fa-shopping-cart"></i> Orders
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.products.index') }}" class="nav-item">
                 <i class="fas fa-glasses"></i> Products
             </a>
-            <a href="#" class="nav-item">
+            <!-- <a href="#" class="nav-item">
                 <i class="fas fa-tags"></i> Categories
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-users"></i> Customers
-            </a>
+            </a> -->
             <!-- <a href="#" class="nav-item">
                 <i class="fas fa-file-medical"></i> Prescriptions
             </a> -->
             <!-- <a href="{#" class="nav-item">
                 <i class="fas fa-chart-bar"></i> Reports
             </a> -->
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.settings.index') }}" class="nav-item">
                 <i class="fas fa-cog"></i> Settings
             </a>
             <a href="{{ route('logout') }}" class="nav-item" 

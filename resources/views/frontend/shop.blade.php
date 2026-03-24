@@ -1,11 +1,10 @@
 @extends('layouts.home')
 
-@section('title', 'About Us - Premium Eyewear')
+@section('title', 'Shop - Premium Eyewear')
 
 @section('content')
 
 <style>
-    /* Shop Layout Container */
     .shop-container {
         max-width: 1400px;
         margin: 0 auto;
@@ -15,18 +14,11 @@
         gap: 30px;
     }
 
-    /* Mobile Responsive */
     @media (max-width: 1024px) {
-        .shop-container {
-            grid-template-columns: 1fr;
-        }
-        
-        .sidebar {
-            position: static !important;
-        }
+        .shop-container { grid-template-columns: 1fr; }
+        .sidebar { position: static !important; }
     }
 
-    /* Sidebar Styles */
     .sidebar {
         background: #fff;
         padding: 20px;
@@ -34,19 +26,17 @@
         height: fit-content;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         position: sticky;
-        top: 20px;
+        top: 80px;
     }
-    
+
     .filter-group {
         margin-bottom: 20px;
         border-bottom: 1px solid #f0f0f0;
         padding-bottom: 15px;
     }
-    
-    .filter-group:last-child {
-        border-bottom: none;
-    }
-    
+
+    .filter-group:last-child { border-bottom: none; }
+
     .filter-header {
         display: flex;
         justify-content: space-between;
@@ -56,95 +46,97 @@
         font-weight: 600;
         font-size: 15px;
         color: #333;
+        user-select: none;
     }
-    
-    .filter-header:hover {
-        color: #4F46E5;
-    }
-    
+
+    .filter-header:hover { color: #7C3AED; }
+
     .filter-icon {
         transition: transform 0.3s ease;
         font-size: 12px;
         color: #666;
     }
-    
-    .filter-icon.open {
-        transform: rotate(180deg);
-    }
-    
+
+    .filter-icon.open { transform: rotate(180deg); }
+
     .filter-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease;
     }
-    
+
     .filter-content.open {
         max-height: 500px;
-        padding-top: 10px;
+        overflow-y: auto;
+        padding-top: 8px;
     }
-    
+
     .filter-option {
-        padding: 8px 0;
+        padding: 7px 0;
         font-size: 14px;
         color: #555;
         cursor: pointer;
         display: flex;
         align-items: center;
-        transition: color 0.2s;
+        transition: color 0.2s, padding-left 0.2s;
     }
-    
-    .filter-option:hover {
-        color: #4F46E5;
-        padding-left: 5px;
-    }
-    
+
+    .filter-option:hover { color: #7C3AED; padding-left: 4px; }
+
     .filter-option input[type="checkbox"] {
         margin-right: 10px;
         cursor: pointer;
         width: 16px;
         height: 16px;
-        accent-color: #4F46E5;
-    }
-    
-    .color-option {
-        display: inline-block;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin: 5px 8px 5px 0;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: all 0.2s;
-    }
-    
-    .color-option:hover {
-        border-color: #4F46E5;
-        transform: scale(1.1);
-    }
-    
-    .color-option.selected {
-        border-color: #4F46E5;
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
-    }
-    
-    .clear-filters {
-        margin-top: 15px;
-        padding: 10px;
-        background: #f8f8f8;
-        text-align: center;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 13px;
-        color: #666;
-        transition: all 0.2s;
-    }
-    
-    .clear-filters:hover {
-        background: #4F46E5;
-        color: white;
+        accent-color: #7C3AED;
+        flex-shrink: 0;
     }
 
-    /* Products Section */
+    .price-inputs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-top: 8px;
+    }
+
+    .price-inputs input {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 8px 10px;
+        font-size: 13px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .price-inputs input:focus { border-color: #7C3AED; }
+
+    .apply-btn {
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px;
+        background: #7C3AED;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .apply-btn:hover { background: #6D28D9; }
+
+    .active-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+
+    .chip {
+        padding: 4px 12px;
+        background: #EDE9FE;
+        color: #7C3AED;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
     .products-section {
         background: #fff;
         padding: 30px;
@@ -154,274 +146,275 @@
 
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 20px;
     }
 
     .product-card {
         background: #fff;
-        padding: 15px;
         border-radius: 12px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.13);
     }
 
-    .product-card img {
+    .product-card .img-wrap {
+        background: #f3f4f6;
+        padding: 20px;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-card .img-wrap img {
         width: 100%;
-        border-radius: 8px;
-        margin-bottom: 15px;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .product-card .info { padding: 16px; }
+
+    .product-card .brand-name {
+        font-size: 11px;
+        font-weight: 700;
+        color: #7C3AED;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 4px;
     }
 
     .product-card h3 {
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 600;
-        margin-bottom: 5px;
+        color: #1f2937;
+        margin-bottom: 4px;
     }
 
-    .product-card p {
-        color: #666;
-        font-size: 14px;
+    .product-card .category-name {
+        font-size: 12px;
+        color: #9ca3af;
         margin-bottom: 10px;
     }
 
     .product-card .price {
         font-size: 20px;
         font-weight: 700;
-        color: #4F46E5;
+        color: #7C3AED;
+        margin-bottom: 12px;
     }
-     .header {
-            background: linear-gradient(135deg, #dce3ff 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            margin-top: 30px;
-        }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
+    .add-cart-btn {
+        width: 100%;
+        padding: 9px;
+        background: #7C3AED;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
 
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
-        }
+    .add-cart-btn:hover { background: #6D28D9; }
 
+    .header {
+        background: linear-gradient(135deg, #dce3ff 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .header h1 { font-size: 2.5em; font-weight: 600; }
 </style>
 
-<!-- Main Shop Layout -->
- <div class="header">
-        <h1>Welcome to Our Shop</h1>
-    </div>
+<!-- Banner -->
+<div class="header">
+    <h1>Welcome to Our Shop</h1>
+</div>
+
 <div class="shop-container">
-    
-    <!-- Sidebar (Left Side) -->
+
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar">
-        <!-- Brand Filter -->
-        <div class="filter-group">
-            <div class="filter-header" onclick="toggleFilter(this)">
-                <span>Brand</span>
-                <span class="filter-icon">▼</span>
+        <form method="GET" action="{{ route('frontend.shop') }}">
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <span style="font-size:17px; font-weight:700; color:#1f2937;">Filters</span>
+                <a href="{{ route('frontend.shop') }}" style="font-size:12px; color:#7C3AED; text-decoration:none;">Clear All</a>
             </div>
-            <div class="filter-content open">
-                <label class="filter-option">
-                    <input type="checkbox" name="brand" value="swarovski">
-                    SWAROVSKI
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="brand" value="charmont">
-                    Z Charmont
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="brand" value="gucci">
-                    GUCCI
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="brand" value="dior">
-                    Dior
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="brand" value="chanel">
-                    CHANEL
-                </label>
-            </div>
-        </div>
-        
-        <!-- Categories Filter -->
-        <div class="filter-group">
-            <div class="filter-header" onclick="toggleFilter(this)">
-                <span>Categories</span>
-                <span class="filter-icon">▼</span>
-            </div>
-            <div class="filter-content open">
-                <label class="filter-option">
-                    <input type="checkbox" name="category" value="eyeglasses">
-                    Eyeglasses
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="category" value="women">
-                    Women's Eyewear
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="category" value="men">
-                    Men's Eyewear
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="category" value="sunglasses">
-                    Sunglasses
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="category" value="contacts">
-                    Contact Lenses
-                </label>
-            </div>
-        </div>
-        
-        <!-- Size Filter -->
-        <!-- <div class="filter-group">
-            <div class="filter-header" onclick="toggleFilter(this)">
-                <span>Size</span>
-                <span class="filter-icon">▼</span>
-            </div>
-            <div class="filter-content">
-                <label class="filter-option">
-                    <input type="checkbox" name="size" value="38">
-                    38
-                </label>
-                <label class="filter-option">
-                    <input type="checkbox" name="size" value="m">
-                    M
-                </label>
-            </div>
-        </div> -->
-        
-        <!-- Color Filter -->
-        <div class="filter-group">
-            <div class="filter-header" onclick="toggleFilter(this)">
-                <span>Color</span>
-                <span class="filter-icon">▼</span>
-            </div>
-            <div class="filter-content">
-                <div style="padding: 5px 0;">
-                    <span class="color-option" style="background: #FFD700;" onclick="selectColor(this)" title="Yellow"></span>
-                    <span class="color-option" style="background: #22C55E;" onclick="selectColor(this)" title="Green"></span>
-                    <span class="color-option" style="background: #EF4444;" onclick="selectColor(this)" title="Red"></span>
-                    <span class="color-option" style="background: #000;" onclick="selectColor(this)" title="Black"></span>
-                    <span class="color-option" style="background: #6B7280;" onclick="selectColor(this)" title="Gray"></span>
-                    <span class="color-option" style="background: #fff; border: 2px solid #ddd;" onclick="selectColor(this)" title="White"></span>
+
+            <!-- BRANDS from DB -->
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggleFilter(this)">
+                    <span>Brand</span>
+                    <span class="filter-icon open">▼</span>
+                </div>
+                <div class="filter-content open">
+                    @forelse($brands as $brand)
+                        <label class="filter-option">
+                            <input type="checkbox"
+                                   name="brands[]"
+                                   value="{{ $brand->id }}"
+                                   {{ in_array($brand->id, request('brands', [])) ? 'checked' : '' }}>
+                            {{ $brand->name }}
+                        </label>
+                    @empty
+                        <p style="font-size:13px; color:#9ca3af; padding: 8px 0;">No brands found.</p>
+                    @endforelse
                 </div>
             </div>
-        </div>
-        
-        <!-- Clear Filters Button -->
-        <div class="clear-filters" onclick="clearAllFilters()">
-            Clear All Filters
-        </div>
+
+            <!-- CATEGORIES from DB -->
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggleFilter(this)">
+                    <span>Categories</span>
+                    <span class="filter-icon open">▼</span>
+                </div>
+                <div class="filter-content open">
+                    @forelse($categories as $category)
+                        <label class="filter-option">
+                            <input type="checkbox"
+                                   name="categories[]"
+                                   value="{{ $category->id }}"
+                                   {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
+                            {{ $category->name }}
+                        </label>
+                    @empty
+                        <p style="font-size:13px; color:#9ca3af; padding: 8px 0;">No categories found.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- PRICE RANGE -->
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggleFilter(this)">
+                    <span>Price Range</span>
+                    <span class="filter-icon open">▼</span>
+                </div>
+                <div class="filter-content open">
+                    <div class="price-inputs">
+                        <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}">
+                        <span style="color:#9ca3af; flex-shrink:0;">—</span>
+                        <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="apply-btn">Apply Filters</button>
+
+        </form>
     </div>
 
-    <!-- Products Section (Right Side) -->
+    <!-- ===== PRODUCTS ===== -->
     <div class="products-section">
-        <div class="products-grid">
-            <!-- Product Card 1 -->
-            <div class="product-card">
-                <img src="{{ asset('storage/product_images/classic-oversized_1724439844.webp') }}" alt="Classic Frame" />
-                <h3>Classic Frame</h3>
-                <p>Ray-Ban</p>
-                <div class="flex items-center justify-between">
-                <p class="price">৳99</p>
-                <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">Add to Cart</button>
-                </div>
-            </div>
 
-            <!-- Product Card 2 -->
-            <div class="product-card">
-                <img src="{{ asset('storage/product_images/dior-majesty_1724234557.webp') }}" alt="Modern Metal Frame" />
-                <h3>Modern Metal Frame</h3>
-                <p>Gucci</p>
-                <!-- <p class="price">$120</p> -->
-                 <div class="flex items-center justify-between">
-                   <span class="text-purple-600 font-bold text-xl">৳150</span>
-                 <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">Add to Cart</button>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-                <img src="{{ asset('storage/product_images/prada-oversized-sunglasses_1717183016.webp') }}" alt="Golden Round Glasses" />
-                <h3>Golden Round Glasses</h3>
-                <p>Armani</p>
-                <div class="flex items-center justify-between">
-                <p class="price">৳140</p>
-                <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">Add to Cart</button>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <img src="{{ asset('storage/product_images/roundify-glasses_1724931415.webp') }}" alt="Brown Vintage Frame" />
-                <h3>Brown Vintage Frame</h3>
-                <p>Oakley</p>
-                <div class="flex items-center justify-between">
-                <p class="price">৳85</p>
-                <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">Add to Cart</button>
-                </div>
-            </div>
-
-            <!-- Product Card 5 -->
-            <div class="product-card">
-                <img src="{{ asset('storage/product_images/titan-thin-horn_1724836003.webp') }}" alt="Transparent Frame" />
-                <h3>Transparent Frame</h3>
-                <p>Ray-Ban</p>
-                <div class="flex items-center justify-between">
-                <p class="price">৳110</p>
-                <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">Add to Cart</button>
-                </div>
-            </div>
-
-            <!-- Product Card 6 -->
-            <div class="product-card">
-                <img src="{{ asset('storage/product_images/silver-full-rim-square-eyeglasses-otis-201440_2_1714208202.webp') }}" alt="Premium Silver Frame" />
-                <h3>Premium Silver Frame</h3>
-                <p>Gucci</p>
-                <div class="flex items-center justify-between">
-                <p class="price">৳160</p>
-                <button class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">Add to Cart</button>
-                </div>
-            </div>
+        <!-- Active filter chips -->
+        @if(request()->hasAny(['brands', 'categories', 'min_price', 'max_price']))
+        <div class="active-chips">
+            @foreach($brands->whereIn('id', request('brands', [])) as $b)
+                <span class="chip">{{ $b->name }}</span>
+            @endforeach
+            @foreach($categories->whereIn('id', request('categories', [])) as $c)
+                <span class="chip">{{ $c->name }}</span>
+            @endforeach
+            @if(request('min_price') || request('max_price'))
+                <span class="chip">৳{{ request('min_price', 0) }} — ৳{{ request('max_price', '') ?: 'any' }}</span>
+            @endif
+            <a href="{{ route('frontend.shop') }}" class="chip" style="background:#fee2e2; color:#dc2626; text-decoration:none;">
+                Clear All x
+            </a>
         </div>
-    </div>
+        @endif
 
+        <!-- Product count -->
+        <h2 style="font-size:20px; font-weight:700; color:#1f2937; margin-bottom:20px;">
+            We found <span style="color:#7C3AED;">{{ $products->total() }}</span> products
+        </h2>
+
+        <!-- Product Grid -->
+        <div class="products-grid">
+            @forelse($products as $product)
+            <!-- <div class="product-card">
+                <div class="img-wrap">
+                    <img src="{{ asset('storage/' . $product->primary_image) }}"
+                         alt="{{ $product->name }}"
+                        onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+                </div>
+                <div class="info">
+                    @if($product->brand)
+                        <p class="brand-name">{{ $product->brand->name }}</p>
+                    @endif
+
+                    <h3>{{ $product->name }}</h3>
+
+                    @if($product->category)
+                        <p class="category-name">{{ $product->category->name }}</p>
+                    @endif
+
+                    <p class="price">{{ number_format($product->price, 2) }}</p>
+
+                    <form action="{{ route('cart.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="add-cart-btn">Add to Cart</button>
+                    </form>
+                </div>
+            </div> -->
+            <div class="product-card" style="cursor:pointer;" onclick="window.location='{{ route('shop.show', $product->slug) }}'">
+    <div class="img-wrap">
+        <img src="{{ asset('storage/' . $product->primary_image) }}"
+             alt="{{ $product->name }}"
+             onerror="this.src='https://placehold.co/300x300?text=No+Image'">
+    </div>
+    <div class="info">
+        @if($product->brand)
+            <p class="brand-name">{{ $product->brand->name }}</p>
+        @endif
+        <h3>{{ $product->name }}</h3>
+        @if($product->category)
+            <p class="category-name">{{ $product->category->name }}</p>
+        @endif
+        <p class="price">৳{{ number_format($product->price, 2) }}</p>
+
+        {{-- form এ stopPropagation দাও --}}
+        <form action="{{ route('cart.store') }}" method="POST" onclick="event.stopPropagation()">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="add-cart-btn">Add to Cart</button>
+        </form>
+    </div>
+</div>
+            @empty
+                <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; color:#9ca3af;">
+                    <p style="font-size:18px; margin-bottom:12px;">No products found.</p>
+                    <a href="{{ route('frontend.shop') }}" style="color:#7C3AED;">Clear filters</a>
+                </div>
+            @endforelse
+        </div>
+
+        <!-- Pagination -->
+        <div style="margin-top: 32px;">
+            {{ $products->links() }}
+        </div>
+
+    </div>
 </div>
 
 <script>
     function toggleFilter(header) {
         const content = header.nextElementSibling;
         const icon = header.querySelector('.filter-icon');
-        
         content.classList.toggle('open');
         icon.classList.toggle('open');
-    }
-    
-    function selectColor(colorElement) {
-        colorElement.classList.toggle('selected');
-    }
-    
-    function clearAllFilters() {
-        // Clear all checkboxes
-        document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(cb => {
-            cb.checked = false;
-        });
-        
-        // Clear all color selections
-        document.querySelectorAll('.color-option').forEach(color => {
-            color.classList.remove('selected');
-        });
     }
 </script>
 

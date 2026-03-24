@@ -82,12 +82,12 @@ nav {
             <div class="flex items-center space-x-4">
 
                 <!-- Search -->
-                <button class="text-gray-700 hover:text-purple-600">
+                <!-- <button class="text-gray-700 hover:text-purple-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                </button>
+                </button> -->
 
                 <!-- User Icon -->
                 <!-- <a href="{{ route('login') }}" class="text-gray-700 hover:text-purple-600">
@@ -98,13 +98,13 @@ nav {
                 </a> -->
 
                 <!-- Cart -->
-                <button class="text-gray-700 hover:text-purple-600 relative">
+                <!-- <button class="text-gray-700 hover:text-purple-600 relative">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                     <span class="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                </button>
+                </button> -->
 
                 <!-- Login -->
                 <a href="{{ route('login') }}" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
@@ -124,69 +124,7 @@ nav {
 <!-- ================= END NAVBAR ================= -->
 @yield('content')
 <!-- ================= FOOTER ================= -->
-<!-- <footer class="bg-gray-900 text-gray-300 py-12">
-    <div class="container mx-auto px-4">
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-
-            <div>
-                <h3 class="text-white text-xl font-bold mb-4">VisionStyle</h3>
-                <p class="text-sm">Your trusted destination for premium eyewear.</p>
-            </div>
-
-            <div>
-                <h4 class="text-white font-semibold mb-4">Shop</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-white">Prescription Glasses</a></li>
-                    <li><a href="#" class="hover:text-white">Sunglasses</a></li>
-                    <li><a href="#" class="hover:text-white">Blue Light Glasses</a></li>
-                    <li><a href="#" class="hover:text-white">Kids Eyewear</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-white font-semibold mb-4">Support</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="{{ route('contact.show') }}" class="hover:text-white">Contact Us</a></li>
-                    <li><a href="{{ route('delivery-policy') }}" class="hover:text-white">Delivery Policy</a></li>
-                    <li><a href="{{ route('returns') }}" class="hover:text-white">Returns</a></li>
-                    <li><a href="{{ route('faq') }}" class="hover:text-white">FAQ</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-white font-semibold mb-4">Follow Us</h4>
-                <div class="flex space-x-4">
-                    <div class="flex space-x-4 text-white">
-                     Facebook -->
-                    <!-- <a href="https://www.facebook.com" class="hover:text-purple-300">
-                        <i class="fab fa-facebook-f text-xl"></i>
-                    </a> 
-
-                     Instagram 
-                    <a href="https://www.instagram.com" class="hover:text-purple-300">
-                        <i class="fab fa-instagram text-xl"></i>
-                    </a>
-
-                     Twitter (X) 
-                    <a href="https://twitter.com" class="hover:text-purple-300">
-                        <i class="fab fa-x-twitter text-xl"></i>
-                    </a>
-                </div>
-
-
-                </div>
-            </div>
-
-        </div>
-
-        <div class="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; 2024 VisionStyle. All rights reserved.</p>
-        </div>
-
-    </div>
-</footer> -->
-<!-- ================= END FOOTER ================= -->
 <footer class="bg-gray-900 text-white py-12">
     <div class="max-w-7xl mx-auto px-6">
 

@@ -72,7 +72,7 @@
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <!-- <th>Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -81,9 +81,9 @@
                             <td>#{{ $order->id }}</td>
                             <td>{{ $order->created_at->format('M d, Y') }}</td>
                             <td>{{ $order->items_count }} item(s)</td>
-                            <td>${{ number_format($order->total, 2) }}</td>
+                            <td>৳{{ number_format($order->total_amount, 2) }}</td>
                             <td><span class="status-badge status-{{ strtolower($order->status) }}">{{ $order->status }}</span></td>
-                            <td><a href="{{ route('orders.show', $order->id) }}" class="btn-view">View</a></td>
+                            <!-- <td><a href="#" class="btn-view">View</a></td> -->
                         </tr>
                         @empty
                         <tr>
@@ -129,27 +129,7 @@
         </section> -->
 
         <!-- Quick Actions -->
-        <!-- <section class="dashboard-section">
-            <h2>Quick Actions</h2>
-            <div class="quick-actions">
-                <a href="{{ route('frontend.shop') }}" class="action-btn">
-                    <i class="fas fa-glasses"></i>
-                    <span>Browse Eyewear</span>
-                </a>
-                <!-- <a href="#prescription" class="action-btn">
-                    <i class="fas fa-upload"></i>
-                    <span>Upload Prescription</span>
-                </a>
-                <a href="#" class="action-btn">
-                    <i class="fas fa-camera"></i>
-                    <span>Virtual Try-On</span>
-                </a> -->
-                <!-- <a href="#" class="action-btn">
-                    <i class="fas fa-headset"></i>
-                    <span>Customer Support</span>
-                </a>
-            </div>
-        </section> --> 
+        
     </main>
 </div>
 

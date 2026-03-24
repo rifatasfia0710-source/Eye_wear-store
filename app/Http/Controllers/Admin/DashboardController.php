@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Order;
 
 class DashboardController extends Controller
 {
@@ -17,9 +18,23 @@ class DashboardController extends Controller
         $totalRevenue = 0;
         $totalOrders = 0;
         
+
+        // ✅ Fix করা হয়েছে
+        $totalOrders = Order::count();
+        $totalRevenue = Order::where('status', 'delivered')
+                             ->sum('total_amount');
+
         // Get all categories for the product form
         $categories = Category::all();
         
+        // ✅ Recent orders with user and items count
+        $recentOrders = Order::with('user')
+            ->withCount('items')
+            ->latest()
+            ->take(10)
+            ->get();
+
+        $pendingOrdersCount = Order::where('status', 'pending')->count();
         // Get recent customers
         $recentCustomers = User::where('role', 'customer')
             ->latest()
@@ -42,8 +57,8 @@ class DashboardController extends Controller
             ->get();
         
         // Empty collections for order data
-        $recentOrders = collect([]);
-        $pendingOrdersCount = 0;
+        // $recentOrders = collect([]);
+        // $pendingOrdersCount = 0;
         
         return view('admin.dashboard', compact(
             'totalCustomers',

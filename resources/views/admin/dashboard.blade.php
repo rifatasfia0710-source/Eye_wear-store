@@ -12,9 +12,7 @@
                 <h1>Welcome back, {{ Auth::user()->name }}!</h1>
                 <p>Monitor your store performance, manage orders, and oversee operations.</p>
             </div>
-            <button class="btn-primary" id="openAddProductModal">
-                <i class="fas fa-plus-circle"></i> Add Product
-            </button>
+            
         </div>
 
         <!-- Success/Error Messages -->
@@ -45,7 +43,7 @@
                     <i class="fas fa-dollar-sign"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>${{ number_format($totalRevenue ?? 0, 2) }}</h3>
+                    <h3>৳{{ number_format($totalRevenue ?? 0, 2) }}</h3>
                     <p>Total Revenue</p>
                 </div>
             </div>
@@ -127,22 +125,22 @@
                     </thead>
                     <tbody>
                         @forelse($recentOrders ?? [] as $order)
-                        <tr>
-                            <td>#{{ $order->id }}</td>
-                            <td>{{ $order->user->name ?? 'Guest' }}</td>
-                            <td>{{ $order->created_at->format('M d, Y') }}</td>
-                            <td>{{ $order->items_count }} item(s)</td>
-                            <td>${{ number_format($order->total, 2) }}</td>
-                            <td><span class="status-badge status-{{ strtolower($order->status) }}">{{ $order->status }}</span></td>
-                            <td>
-                                <a href="{{ route('admin.orders.show', $order->id) }}" class="btn-view">View</a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="no-data">No recent orders found.</td>
-                        </tr>
-                        @endforelse
+<tr>
+    <td>#{{ $order->id }}</td>
+    <td>{{ $order->user->name ?? 'Guest' }}</td>
+    <td>{{ $order->created_at->format('M d, Y') }}</td>
+    <td>{{ $order->items_count }} item(s)</td>  {{-- ✅ withCount('items') থেকে আসছে --}}
+    <td>৳{{ number_format($order->total_amount, 2) }}</td>  {{-- ✅ total থেকে total_amount --}}
+    <td><span class="status-badge status-{{ strtolower($order->status) }}">{{ $order->status }}</span></td>
+    <td>
+        <a href="{{ route('admin.orders.show', $order->id) }}" class="btn-view">View</a>
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="7" class="no-data">No recent orders found.</td>
+</tr>
+@endforelse
                     </tbody>
                 </table>
             </div>
@@ -215,7 +213,7 @@
                             <td>#{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category->name ?? 'N/A' }}</td>
-                            <td>${{ number_format($product->price, 2) }}</td>
+                            <td>৳{{ number_format($product->price, 2) }}</td>
                             <td>{{ $product->stock }}</td>
                             <td>{{ $product->sales_count ?? 0 }}</td>
                             <td>

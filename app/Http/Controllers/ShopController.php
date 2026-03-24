@@ -10,38 +10,25 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    /**
-     * Display the shop page with products and filters
-     */
-    // public function index(Request $request)
-    // {
-    //     // Start with base query
-    //     $query = Product::with(['brand', 'category', 'colors']);
-    //         // ->where('is_active', true);
-
-    //     // Apply filters
-    //     $this->applyFilters($query, $request);
-
-    //     // Apply sorting
-    //     $this->applySorting($query, $request);
-
-    //     // Paginate results
-    //     // $products = $query->paginate(12)->withQueryString();
-
-    //     // Get filter options
-    //     // $filterData = $this->getFilterOptions();
-
-
-
-    //     // return view('shop.index', array_merge([
-    //     //     'products' => $products,
-    //     // ], $filterData));
-    //     return view('shop.index', compact('products', 'brands', 'categories', 'colors', 'frameTypes'));
-    // }
+    
 public function index(Request $request)
 {
     // Base query
-    $query = Product::with(['brand', 'category', 'colors']);
+    $query = Product::with(['brand', 'category','images', 'colors']);
+
+/* -------------------------
+           BRAND FILTER
+        --------------------------*/
+        if ($request->filled('brands')) {
+            $query->whereIn('brand_id', $request->brands);
+        }
+
+        /* -------------------------
+           CATEGORY FILTER
+        --------------------------*/
+        if ($request->filled('categories')) {
+            $query->whereIn('category_id', $request->categories);
+        }
 
     // Apply filters
     $this->applyFilters($query, $request);
@@ -71,6 +58,13 @@ public function index(Request $request)
         'colors',
         'frameTypes'
     ));
+    // 🔥 These will show ALL seeded brands & categories
+        $brands = Brand::where('is_active', true)->orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
+    {
+    $products = Product::with('brand')->paginate(12);
+    return view('frontend.shop', compact('products'));
+    }
 }
 
     /**
@@ -171,9 +165,14 @@ public function index(Request $request)
             ->where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();
+            
+        $product = Product::with(['images', 'reviews.user'])
+                      ->where('slug', $slug)
+                      ->firstOrFail();
 
+    return view('frontend.shop-details', compact('product'));
         // Increment view count
-        $product->increment('views_count');
+        // $product->increment('views_count');
 
         // Get related products
         $relatedProducts = Product::where('category_id', $product->category_id)
@@ -183,7 +182,7 @@ public function index(Request $request)
             ->limit(4)
             ->get();
 
-        return view('shop.show', compact('product', 'relatedProducts'));
+        return view('frontend.shop-details', compact('product', 'relatedProducts'));
     }
 
     /**
