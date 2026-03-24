@@ -24,11 +24,6 @@ Eye Wear Store is a web-based application developed to manage and showcase eyewe
 * **Database:** MySQL
 * **Version Control:** Git & GitHub
 
----
-
-## 📸 Screenshots
-
-(Add your project screenshots here)
 
 ---
 
