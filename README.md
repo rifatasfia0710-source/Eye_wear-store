@@ -8,12 +8,14 @@ Eye Wear Store is a web-based application developed to manage and showcase eyewe
 
 ## 🚀 Features
 
-* 🛍️ Product listing and details
-* 🔍 Search functionality
-* 👤 User authentication (Login & Registration)
-* 🛒 Add to cart system
-* 📦 Order management
-* 🛠️ Admin panel for product management
+*  Authentication system
+*  Product listing and details
+*  Search functionality
+*  User authentication (Login & Registration)
+*  Add to cart system
+*  Admin panel for product management
+*  Order tracking
+*  Payment Integration (Sandbox)
 
 ---
 
@@ -36,6 +38,4 @@ Eye Wear Store is a web-based application developed to manage and showcase eyewe
 
 
 
-
-**Ratri (Rifa Tasfia)**
 BSc in CSE | Web Developer
